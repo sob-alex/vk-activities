@@ -23,22 +23,23 @@
           v-model="localFilters.contentTypes.wall"
           label="Постов"
           hide-details
-          :error-messages="showLikesErrors"
           dense
         ></v-checkbox>
         <v-checkbox
           v-model="localFilters.contentTypes.comments"
           label="Комментариев"
           hide-details
-          :error-messages="showLikesErrors"
           dense
         ></v-checkbox>
         <v-checkbox
           v-model="localFilters.contentTypes.photos"
           label="Фото в альбомах"
           dense
-          :error-messages="showLikesErrors"
+          hide-details
         ></v-checkbox>
+        <div class="v-messages v-messages__message error--text">
+          {{ showLikesErrors }}
+        </div>
       </v-card>
       <!-- WHERE TO SEARCH -->
       <v-card class="card" :elevation="2">
@@ -48,16 +49,18 @@
             v-model="localFilters.whereSearch.userPages"
             label="Страницах"
             hide-details
-            :error-messages="searchInErrors"
             dense
           ></v-checkbox>
           <!-- TODO: bad desicion, need to put error in some div -->
           <v-checkbox
             v-model="localFilters.whereSearch.groupPages"
             label="Группах"
-            :error-messages="searchInErrors"
+            hide-details
             dense
           ></v-checkbox>
+        </div>
+        <div class="mt-2 v-messages v-messages__message error--text">
+          {{ searchInErrors }}
         </div>
       </v-card>
       <!-- WHERE TO SEARCH IN USERS -->
@@ -71,18 +74,21 @@
           label="Искать в:"
           v-model="localFilters.whereSearchInUsers.selected"
           :items="localFilters.whereSearchInUsers.items"
-          :rules="[rules.required]"
+          :error-messages="selectUserFilterErrors"
           outlined
           multiple
           dense
-          hide-details
+          :hide-details="!selectUserFilterErrors.length"
+          @change="
+            $v.localFilters.whereSearchInUsers.selected.$touch()
+          "
+          @blur="$v.localFilters.whereSearchInUsers.selected.$touch()"
         ></v-select>
         <v-combobox
           v-if="isSpecifiedProfilesShown"
           class="mt-3"
           v-model="localFilters.whereSearchInUsers.specifiedProfiles"
           label="ID пользователей"
-          :rules="[rules.required]"
           multiple
           outlined
           dense
@@ -101,23 +107,28 @@
           label="Искать в:"
           v-model="localFilters.whereSearchInGroups.selected"
           :items="localFilters.whereSearchInGroups.items"
-          :rules="[rules.required]"
           multiple
           outlined
           dense
-          hide-details
+          :error-messages="selectGroupFilterErrors"
+          :hide-details="!selectGroupFilterErrors.length"
+          @change="
+            $v.localFilters.whereSearchInGroups.selected.$touch()
+          "
+          @blur="
+            $v.localFilters.whereSearchInGroups.selected.$touch()
+          "
         ></v-select>
         <v-combobox
           v-if="isSpecifiedGroupsShown"
           class="mt-3"
           v-model="localFilters.whereSearchInUsers.specifiedGroups"
-          :rules="[rules.required]"
           label="ID групп"
           multiple
           outlined
           dense
           clearable
-          :hide-details="valid"
+          :hide-details="localFilters.valid"
         ></v-combobox>
       </v-card>
     </v-form>
@@ -127,58 +138,38 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, email } from 'vuelidate/lib/validators'
-import { isSomeValueTrueInObject } from '../../../utils/utils'
+import validationsMixin from './validationsMixin'
 import {
   USER_SERACH_PLACES,
   GROUP_SERACH_PLACES,
-} from '../../../constants/constants'
+} from '../../../../constants/constants'
 export default {
   name: 'UserSettingsPanel',
   props: {
     value: Object,
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, validationsMixin],
   validations: {
     localFilters: {
       userId: { required },
+      whereSearchInUsers: {
+        selected: {
+          some: (val) => val.length,
+        },
+      },
+      whereSearchInGroups: {
+        selected: {
+          some: (val) => val.length,
+        },
+      },
     },
   },
   data() {
     return {
-      valid: true,
       localFilters: { ...this.value },
-      rules: {
-        required: (value) =>
-          Boolean(value.length) || 'Выберите что-нибудь',
-      },
     }
   },
   computed: {
-    userIdErrors() {
-      const errors = []
-      if (!this.$v.localFilters.userId.$dirty) return errors
-      if (!this.$v.localFilters.userId.required) {
-        errors.push('User ID не должно быть пустым')
-      }
-      return errors
-    },
-    showLikesErrors() {
-      this.valid = true
-
-      if (!isSomeValueTrueInObject(this.localFilters.contentTypes)) {
-        this.valid = false
-        return 'Выберите хотя бы одну опцию'
-      }
-      return ''
-    },
-    searchInErrors() {
-      this.valid = true
-      if (!isSomeValueTrueInObject(this.localFilters.whereSearch)) {
-        this.valid = false
-        return 'Выберите хотя бы одну опцию'
-      }
-      return ''
-    },
     isSpecifiedProfilesShown() {
       return this.localFilters.whereSearchInUsers.selected.includes(
         USER_SERACH_PLACES.SPECIFIED_PROFILES
@@ -193,7 +184,10 @@ export default {
   watch: {
     localFilters: {
       handler() {
-        this.$emit('input', this.localFilters)
+        this.$emit('input', {
+          ...this.localFilters,
+          valid: this.localFilters.valid && !this.$v.$invalid,
+        })
       },
       deep: true,
     },

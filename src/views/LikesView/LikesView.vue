@@ -13,6 +13,7 @@
           depressed
           color="primary"
           block
+          :disabled="!settingsFilters.valid"
           @click="search"
           >Поиск</v-btn
         >
@@ -47,7 +48,7 @@
 import Vue from 'vue'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import PostCard from '../../components/PostCard.vue'
-import SettingsPanel from './components/SettingsPanel.vue'
+import SettingsPanel from './components/SettingsPanel/SettingsPanel.vue'
 import {
   GROUP_SERACH_PLACES,
   USER_SERACH_PLACES,
@@ -63,6 +64,7 @@ export default Vue.extend({
   data: () => ({
     tab: 0,
     settingsFilters: {
+      valid: true,
       userId: '',
       contentTypes: {
         wall: true,
@@ -114,10 +116,10 @@ export default Vue.extend({
         groupsSelectedOptions:
           this.settingsFilters.whereSearchInGroups,
       })
-      await this.getLikedContent(
-        this.settingsFilters.contentTypes,
-        this.settingsFilters.userId
-      )
+      // await this.getLikedContent(
+      //   this.settingsFilters.contentTypes,
+      //   this.settingsFilters.userId
+      // )
     },
     getPosts() {
       this.fetchPosts({ owner_id: this.userId })

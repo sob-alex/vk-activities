@@ -54,7 +54,7 @@ const wallModule = {
         const posts = []
 
         for (const owner_id of users) {
-          const posts = await fetchAction(commit, {
+          const { items: posts } = await fetchAction(commit, {
             apiMethod: API.wall.getPosts,
             params: { owner_id },
           })
@@ -62,7 +62,7 @@ const wallModule = {
           await sleep(200)
         }
         for (const post of posts) {
-          const sd = await fetchAction(commit, {
+          const { isLiked } = await fetchAction(commit, {
             apiMethod: API.likes.getIsLiked,
             params: {
               user_id: userId,

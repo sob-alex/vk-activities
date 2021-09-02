@@ -64,7 +64,7 @@ const profileModule = {
       if (userPages) {
         if (selectedUsersItems.includes(USER_SERACH_PLACES.FRIENDS)) {
           commit('setIsLoading', true)
-          const userIds = await fetchAction(commit, {
+          const { items: userIds } = await fetchAction(commit, {
             apiMethod: API.friends.getUserFriends,
             params: { user_id },
           })
@@ -75,7 +75,7 @@ const profileModule = {
           selectedUsersItems.includes(USER_SERACH_PLACES.SUBSCRIBERS)
         ) {
           commit('setIsLoading', true)
-          const userIds = await fetchAction(commit, {
+          const { items: userIds } = await fetchAction(commit, {
             apiMethod: API.friends.getUserFollowers,
             params: { user_id },
           })
@@ -90,7 +90,7 @@ const profileModule = {
           )
         ) {
           commit('setIsLoading', true)
-          const groupIds = await fetchAction(commit, {
+          const { items: groupIds } = await fetchAction(commit, {
             apiMethod: API.groups.getUserGroups,
             params: { user_id },
           })
