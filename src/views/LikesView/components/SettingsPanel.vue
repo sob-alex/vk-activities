@@ -3,9 +3,7 @@
     <v-form>
       <!-- MAIN INFO -->
       <v-card class="card" :elevation="2">
-        <div class="text-subtitle-2 mb-2">
-          ID пользователя
-        </div>
+        <div class="text-subtitle-2 mb-2">ID пользователя</div>
         <v-text-field
           v-model="localFilters.userId"
           label="Введите ID"
@@ -20,9 +18,7 @@
       </v-card>
       <!-- TYPES OF LIKE CONTENT -->
       <v-card class="card" :elevation="2">
-        <div class="text-subtitle-2 mb-2">
-          Просмотреть лайки
-        </div>
+        <div class="text-subtitle-2 mb-2">Просмотреть лайки</div>
         <v-checkbox
           v-model="localFilters.contentTypes.wall"
           label="Постов"
@@ -70,9 +66,7 @@
         class="card"
         :elevation="2"
       >
-        <div class="text-subtitle-2 mb-4">
-          Фильтр пользователей
-        </div>
+        <div class="text-subtitle-2 mb-4">Фильтр пользователей</div>
         <v-select
           label="Искать в:"
           v-model="localFilters.whereSearchInUsers.selected"
@@ -86,10 +80,7 @@
         <v-combobox
           v-if="isSpecifiedProfilesShown"
           class="mt-3"
-          v-model="
-            localFilters.whereSearchInUsers
-              .specifiedProfiles
-          "
+          v-model="localFilters.whereSearchInUsers.specifiedProfiles"
           label="ID пользователей"
           :rules="[rules.required]"
           multiple
@@ -108,9 +99,7 @@
         <div class="text-subtitle-2 mb-4">Фильтр групп</div>
         <v-select
           label="Искать в:"
-          v-model="
-            localFilters.whereSearchInGroups.selected
-          "
+          v-model="localFilters.whereSearchInGroups.selected"
           :items="localFilters.whereSearchInGroups.items"
           :rules="[rules.required]"
           multiple
@@ -121,9 +110,7 @@
         <v-combobox
           v-if="isSpecifiedGroupsShown"
           class="mt-3"
-          v-model="
-            localFilters.whereSearchInUsers.specifiedGroups
-          "
+          v-model="localFilters.whereSearchInUsers.specifiedGroups"
           :rules="[rules.required]"
           label="ID групп"
           multiple
@@ -139,11 +126,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import {
-  required,
-  maxLength,
-  email,
-} from 'vuelidate/lib/validators'
+import { required, maxLength, email } from 'vuelidate/lib/validators'
 import { isSomeValueTrueInObject } from '../../../utils/utils'
 import {
   USER_SERACH_PLACES,
@@ -182,11 +165,7 @@ export default {
     showLikesErrors() {
       this.valid = true
 
-      if (
-        !isSomeValueTrueInObject(
-          this.localFilters.contentTypes
-        )
-      ) {
+      if (!isSomeValueTrueInObject(this.localFilters.contentTypes)) {
         this.valid = false
         return 'Выберите хотя бы одну опцию'
       }
@@ -194,11 +173,7 @@ export default {
     },
     searchInErrors() {
       this.valid = true
-      if (
-        !isSomeValueTrueInObject(
-          this.localFilters.whereSearch
-        )
-      ) {  
+      if (!isSomeValueTrueInObject(this.localFilters.whereSearch)) {
         this.valid = false
         return 'Выберите хотя бы одну опцию'
       }

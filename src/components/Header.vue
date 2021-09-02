@@ -1,7 +1,9 @@
 <template>
   <v-app-bar class="app-bar" app dark>
     <v-btn class="app-bar__button" plain>
-      <router-link class="app-bar__link" to="/">Поиск по лайкам</router-link>
+      <router-link class="app-bar__link" to="/"
+        >Поиск по лайкам</router-link
+      >
     </v-btn>
     <v-btn class="app-bar__button" plain>
       <router-link class="app-bar__link" to="/comments"
@@ -22,11 +24,11 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from 'vue'
 
 export default Vue.extend({
   name: 'Header',
-});
+})
 </script>
 
 <style lang="scss">

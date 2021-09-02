@@ -72,7 +72,6 @@ const wallModule = {
             },
           })
           posts.push(...posts)
-          console.log(owner_id)
           console.log(posts)
           await sleep(200)
         }

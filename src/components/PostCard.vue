@@ -29,7 +29,7 @@ export default {
     likesCount: Number,
     repostsCount: Number,
   },
-};
+}
 </script>
 
 <style lang="scss" scoped></style>

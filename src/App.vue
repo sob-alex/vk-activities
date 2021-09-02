@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import Header from './components/Header.vue';
+import Vue from 'vue'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
+import Header from './components/Header.vue'
 export default Vue.extend({
   name: 'App',
   components: {
@@ -24,14 +24,13 @@ export default Vue.extend({
   data: () => ({
     //
   }),
-
-});
+})
 </script>
 
 <style lang="scss">
 @import './scss/overrides.sass';
 @import './scss/colors.scss';
-#app{
+#app {
   background-color: var(--v-background-base);
 }
 </style>

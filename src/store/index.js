@@ -1,9 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import content from './content';
-import profiles from './profiles';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import content from './content'
+import profiles from './profiles'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {},
@@ -11,6 +11,6 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     content,
-    profiles
+    profiles,
   },
-});
+})

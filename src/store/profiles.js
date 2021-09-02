@@ -12,7 +12,6 @@ const profileModule = {
     error: null,
     groups: [],
     users: [],
-    
   },
   getters: {
     isLoading: (state) => state.isLoading,

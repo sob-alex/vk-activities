@@ -1,6 +1,6 @@
 import http from '../plugins/axios'
 
-const getIsLiked = ({ user_id, type, item_id }) =>
+const getIsLiked = ({ user_id, type, item_id, owner_id }) =>
   http.jsonp('wall.get', {
     params: {
       user_id,

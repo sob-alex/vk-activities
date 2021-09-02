@@ -10,7 +10,7 @@ export default new Vuetify({
       light: {
         primary: colors.blue.darken1,
         onPrimary: '#fff',
-        background: '#f7faff'
+        background: '#f7faff',
       },
     },
     options: { customProperties: true },
