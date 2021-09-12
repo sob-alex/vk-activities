@@ -34,24 +34,23 @@ const profileModule = {
     },
   },
   actions: {
-    async getTargetIds(
-      { commit, getters },
-      {
-        user_id,
+    async getTargetIds({ commit, getters, rootGetters }) {
+      const settings = rootGetters['settingsFilter/settingsFilters']
+      const {
+        userId: user_id,
         whereSearch: { userPages, groupPages },
-        usersSelectedOptions: {
+        whereSearchInUsers: {
           selected: selectedUsersItems,
           specifiedProfiles,
         },
-        groupsSelectedOptions: {
+        whereSearchInGroups: {
           selected: selectedGroupsItems,
           specifiedGroups,
         },
-      }
-    ) {
-      let profiles = [];
+      } = settings
+      let profiles = []
       if (specifiedProfiles.length) {
-         profiles = await fetchAction(commit, {
+        profiles = await fetchAction(commit, {
           apiMethod: API.users.getUsersInfo,
           params: { user_ids: specifiedProfiles.join() },
         })

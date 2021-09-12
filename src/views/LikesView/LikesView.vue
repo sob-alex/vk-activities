@@ -7,7 +7,7 @@
 
     <v-row class="mt-2">
       <v-col class="settings" cols="4">
-        <SettingsPanel v-model="settingsFilters" />
+        <SettingsPanel />
         <v-btn
           class="mt-4"
           depressed
@@ -59,38 +59,10 @@ const LIKES_CONTENT_TYPES = {
   COMMENTS: 'Комментарии',
 }
 
-
 export default Vue.extend({
   name: 'Home',
   data: () => ({
     tab: 0,
-    settingsFilters: {
-      valid: true,
-      userId: '',
-      contentTypes: {
-        wall: true,
-        photos: true,
-        comments: true,
-      },
-      whereSearch: {
-        userPages: true,
-        groupPages: true,
-      },
-      whereSearchInUsers: {
-        selected: [USER_SERACH_PLACES.FRIENDS],
-        items: [...Object.values(USER_SERACH_PLACES)],
-        specifiedProfiles: [],
-      },
-      whereSearchInGroups: {
-        selected: [GROUP_SERACH_PLACES.USER_GROUPS],
-        items: [...Object.values(GROUP_SERACH_PLACES)],
-        specifiedGroups: [],
-      },
-      searchDepth:{
-        selected: 10,
-        items: [10,50,100]
-      }
-    },
   }),
   components: {
     PostCard,
@@ -99,6 +71,7 @@ export default Vue.extend({
   computed: {
     ...mapGetters('content', ['likedPosts']),
     ...mapGetters('profiles', ['groups']),
+    ...mapGetters('settingsFilter', ['settingsFilters']),
     resultTabs() {
       const result = []
       for (let type in LIKES_CONTENT_TYPES) {
@@ -112,21 +85,12 @@ export default Vue.extend({
   methods: {
     ...mapActions('content', ['fetchPosts', 'getLikedContent']),
     ...mapActions('profiles', ['fetchGroups', 'getTargetIds']),
+    ...mapActions(['startSearch']),
     async search() {
       if (!this.settingsFilters.valid) {
         return
       }
-      await this.getTargetIds({
-        user_id: this.settingsFilters.userId,
-        whereSearch: this.settingsFilters.whereSearch,
-        usersSelectedOptions: this.settingsFilters.whereSearchInUsers,
-        groupsSelectedOptions:
-          this.settingsFilters.whereSearchInGroups,
-      })
-      await this.getLikedContent({
-        options: this.settingsFilters.contentTypes,
-        userId: this.settingsFilters.userId,
-      })
+      this.startSearch()
     },
   },
   created() {},

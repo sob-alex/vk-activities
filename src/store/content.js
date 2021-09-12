@@ -46,22 +46,24 @@ const contentModule = {
         commit('setIsLoading', false)
       }
     },
-    async getLikedContent(
-      { commit, getters, rootGetters },
-      { options, userId }
-    ) {
+    async getLikedContent({ commit, getters, rootGetters }) {
       const users = rootGetters['profiles/users']
       const groups = rootGetters['profiles/groups']
-      console.log(options)
-      if (options.wall) {
+      const { contentTypes, userId, searchDepth: { selected: depthOfSearch} } =
+        rootGetters['settingsFilter/settingsFilters']
+      console.log(contentTypes)
+      if (contentTypes.wall) {
         const posts = []
-        for (const {id, first_name, last_name} of users) {
+        for (const { id, first_name, last_name } of users) {
           const data = await fetchAction(commit, {
             apiMethod: API.wall.getPosts,
-            params: { owner_id: id },
+            params: { owner_id: id, count: depthOfSearch },
           })
           if (data.items) {
-            const postsWithOwnerNames = data.items.map(post=>({...post, name: `${first_name} ${last_name}`}))
+            const postsWithOwnerNames = data.items.map((post) => ({
+              ...post,
+              name: `${first_name} ${last_name}`,
+            }))
             posts.push(...postsWithOwnerNames)
           }
           await sleep(200)

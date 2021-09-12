@@ -147,6 +147,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
+import { mapMutations } from 'vuex'
 import { required, maxLength, email } from 'vuelidate/lib/validators'
 import validationsMixin from './validationsMixin'
 import {
@@ -176,8 +177,13 @@ export default {
   },
   data() {
     return {
-      localFilters: { ...this.value },
+      localFilters: {
+        ...this.$store.state.settingsFilter.settingsFilters,
+      },
     }
+  },
+  methods:{
+    ...mapMutations('settingsFilter', ['setSettingsFilters'])
   },
   computed: {
     isSpecifiedProfilesShown() {
@@ -194,7 +200,7 @@ export default {
   watch: {
     localFilters: {
       handler() {
-        this.$emit('input', {
+        this.setSettingsFilters({
           ...this.localFilters,
           valid: this.localFilters.valid && !this.$v.$invalid,
         })
@@ -211,6 +217,9 @@ export default {
         GROUP_SERACH_PLACES.USER_GROUPS,
       ]
     },
+  },
+  mounted() {
+    console.log(this.$store)
   },
 }
 </script>

@@ -1,9 +1,9 @@
 import http from '../plugins/axios'
 
-const getPosts = ({ owner_id }) =>
+const getPosts = (params) =>
   http.jsonp('wall.get', {
     params: {
-      owner_id,
+      ...params,
       extended: 1,
       fields: 'first_name,name'
     },
