@@ -2,7 +2,7 @@
   <div class="likes-view">
     <h1 class="text-h4 mt-7">Поиск по лайкам</h1>
     <div class="text--secondary text-body-1 mt-3">
-      Ищутся лайки пользователя в группах, на которые он подписан
+      Ищутся лайки пользователя в группах и на страницах пользователей
     </div>
 
     <v-row class="mt-2">
@@ -28,17 +28,17 @@
             item
           }}</v-tab>
         </v-tabs>
-        <v-tabs-items v-model="tab">
-          <v-tab-item v-for="item in resultTabs" :key="item">
-          </v-tab-item>
-        </v-tabs-items>
-        <!-- <PostCard
-          v-for="post in posts"
-          :key="post.id"
-          :postText="post.text"
-          :likesCount="post.likes.count"
-          :repostsCount="post.reposts.count"
-        /> -->
+        <div v-if="tab === 0" class="wall">
+          wall
+          <PostCard
+            v-for="post in likedPosts"
+            :key="post.id"
+            :name="post.name"
+            :postText="post.text"
+            :likesCount="post.likes.count"
+            :repostsCount="post.reposts.count"
+          />
+        </div>
       </v-col>
     </v-row>
   </div>
@@ -58,6 +58,7 @@ const LIKES_CONTENT_TYPES = {
   PHOTOS: 'Фото в альбоме',
   COMMENTS: 'Комментарии',
 }
+
 
 export default Vue.extend({
   name: 'Home',
@@ -85,6 +86,10 @@ export default Vue.extend({
         items: [...Object.values(GROUP_SERACH_PLACES)],
         specifiedGroups: [],
       },
+      searchDepth:{
+        selected: 10,
+        items: [10,50,100]
+      }
     },
   }),
   components: {
@@ -92,7 +97,7 @@ export default Vue.extend({
     SettingsPanel,
   },
   computed: {
-    ...mapGetters('content', ['posts']),
+    ...mapGetters('content', ['likedPosts']),
     ...mapGetters('profiles', ['groups']),
     resultTabs() {
       const result = []
@@ -108,7 +113,9 @@ export default Vue.extend({
     ...mapActions('content', ['fetchPosts', 'getLikedContent']),
     ...mapActions('profiles', ['fetchGroups', 'getTargetIds']),
     async search() {
-      console.log('search')
+      if (!this.settingsFilters.valid) {
+        return
+      }
       await this.getTargetIds({
         user_id: this.settingsFilters.userId,
         whereSearch: this.settingsFilters.whereSearch,
@@ -116,16 +123,10 @@ export default Vue.extend({
         groupsSelectedOptions:
           this.settingsFilters.whereSearchInGroups,
       })
-      // await this.getLikedContent(
-      //   this.settingsFilters.contentTypes,
-      //   this.settingsFilters.userId
-      // )
-    },
-    getPosts() {
-      this.fetchPosts({ owner_id: this.userId })
-    },
-    getUserLikesInGroups() {
-      this.fetchGroups({ user_id: this.userId })
+      await this.getLikedContent({
+        options: this.settingsFilters.contentTypes,
+        userId: this.settingsFilters.userId,
+      })
     },
   },
   created() {},

@@ -9,18 +9,19 @@ export const fetchAction = async (
   commit,
   { apiMethod, params = {}, needCommit = false, commitType = '' }
 ) => {
-  let data = []
+  let data = {}
   try {
     const { response, error } = await apiMethod(params)
     if (error) {
       commit('setError', error.error_msg)
       console.error(error)
+      data = error;
       return data
     }
     if (needCommit) {
       commit(commitType, response)
     }
-    console.log(response)
+    console.log('RESPONSE:',response)
     data = response
   } catch (e) {
     console.error(e)

@@ -4,6 +4,7 @@ const getUserFriends = ({ user_id }) =>
   http.jsonp('friends.get', {
     params: {
       user_id,
+      fields: 'nickname'
     },
   })
 

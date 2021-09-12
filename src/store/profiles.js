@@ -34,16 +34,6 @@ const profileModule = {
     },
   },
   actions: {
-    async fetchGroups({ commit }, { user_id }) {
-      console.log('before')
-      await fetch(commit, {
-        apiMethod: API.groups.getUserGroups,
-        params: { user_id },
-        commitType: 'setGroups',
-      })
-      console.log('after')
-    },
-
     async getTargetIds(
       { commit, getters },
       {
@@ -59,8 +49,16 @@ const profileModule = {
         },
       }
     ) {
-      commit('setUsers', [...specifiedProfiles])
-      commit('setUsers', [...specifiedGroups])
+      let profiles = [];
+      if (specifiedProfiles.length) {
+         profiles = await fetchAction(commit, {
+          apiMethod: API.users.getUsersInfo,
+          params: { user_ids: specifiedProfiles.join() },
+        })
+      }
+      commit('setUsers', [...profiles])
+      commit('setGroups', [...specifiedGroups])
+
       if (userPages) {
         if (selectedUsersItems.includes(USER_SERACH_PLACES.FRIENDS)) {
           commit('setIsLoading', true)

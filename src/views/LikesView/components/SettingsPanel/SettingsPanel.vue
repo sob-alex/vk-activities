@@ -51,7 +51,6 @@
             hide-details
             dense
           ></v-checkbox>
-          <!-- TODO: bad desicion, need to put error in some div -->
           <v-checkbox
             v-model="localFilters.whereSearch.groupPages"
             label="Группах"
@@ -131,6 +130,17 @@
           :hide-details="localFilters.valid"
         ></v-combobox>
       </v-card>
+      <v-card class="card" :elevation="2">
+        <div class="text-subtitle-2 mb-4">Глубина поиска</div>
+        <v-select
+          label="Выберите глубину:"
+          v-model="localFilters.searchDepth.selected"
+          :items="localFilters.searchDepth.items"
+          outlined
+          dense
+          hide-details
+        ></v-select>
+      </v-card>
     </v-form>
   </div>
 </template>
@@ -190,6 +200,16 @@ export default {
         })
       },
       deep: true,
+    },
+    'localFilters.whereSearch.userPages'() {
+      this.localFilters.whereSearchInUsers.selected = [
+        USER_SERACH_PLACES.FRIENDS,
+      ]
+    },
+    'localFilters.whereSearch.groupPages'() {
+      this.localFilters.whereSearchInGroups.selected = [
+        GROUP_SERACH_PLACES.USER_GROUPS,
+      ]
     },
   },
 }

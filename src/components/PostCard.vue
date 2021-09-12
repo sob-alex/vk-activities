@@ -1,7 +1,7 @@
 <template>
   <div class="psot-card">
     <v-card max-width="700" class="mx-auto my-2">
-      <v-card-title class="text-h5">Cafe Badilico</v-card-title>
+      <v-card-title class="text-h5">{{name}}</v-card-title>
 
       <v-card-text>
         <div class="text-body-2">
@@ -28,6 +28,7 @@ export default {
     postText: String,
     likesCount: Number,
     repostsCount: Number,
+    name: String
   },
 }
 </script>
