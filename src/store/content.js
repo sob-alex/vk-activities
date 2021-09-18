@@ -49,11 +49,13 @@ const contentModule = {
     async getLikedContent({ commit, getters, rootGetters }) {
       const users = rootGetters['profiles/users']
       const groups = rootGetters['profiles/groups']
-      const { contentTypes, userId, searchDepth: { selected: depthOfSearch} } =
-        rootGetters['settingsFilter/settingsFilters']
+      const {
+        contentTypes,
+        userId,
+        searchDepth: { selected: depthOfSearch },
+      } = rootGetters['settingsFilter/settingsFilters']
       console.log(contentTypes)
       if (contentTypes.wall) {
-        const posts = []
         for (const { id, first_name, last_name } of users) {
           const data = await fetchAction(commit, {
             apiMethod: API.wall.getPosts,
@@ -64,24 +66,22 @@ const contentModule = {
               ...post,
               name: `${first_name} ${last_name}`,
             }))
-            posts.push(...postsWithOwnerNames)
+            for (const post of postsWithOwnerNames) {
+              const { liked } = await fetchAction(commit, {
+                apiMethod: API.likes.getIsLiked,
+                params: {
+                  user_id: userId,
+                  type: CONTENT_TYPE.POST,
+                  item_id: post.id,
+                  owner_id: post.owner_id,
+                },
+              })
+              if (liked) {
+                commit('setLikedPosts', [...getters.likedPosts, post])
+              }
+              await sleep(200)
+            }
           }
-          await sleep(200)
-        }
-        for (const post of posts) {
-          const { liked } = await fetchAction(commit, {
-            apiMethod: API.likes.getIsLiked,
-            params: {
-              user_id: userId,
-              type: CONTENT_TYPE.POST,
-              item_id: post.id,
-              owner_id: post.owner_id,
-            },
-          })
-          if (liked) {
-            commit('setLikedPosts', [...getters.likedPosts, post])
-          }
-          await sleep(200)
         }
       }
     },

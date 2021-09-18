@@ -29,7 +29,6 @@
           }}</v-tab>
         </v-tabs>
         <div v-if="tab === 0" class="wall">
-          wall
           <PostCard
             v-for="post in likedPosts"
             :key="post.id"
