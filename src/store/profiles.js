@@ -3,7 +3,7 @@ import {
   GROUP_SERACH_PLACES,
   USER_SERACH_PLACES,
 } from '../constants/constants'
-import { fetchAction } from '../utils/utils'
+import { fetchAction, substract } from '../utils/utils'
 
 const profileModule = {
   namespaced: true,
@@ -49,14 +49,21 @@ const profileModule = {
         },
       } = settings
       let profiles = []
+      let groups = []
       if (specifiedProfiles.length) {
         profiles = await fetchAction(commit, {
           apiMethod: API.users.getUsersInfo,
           params: { user_ids: specifiedProfiles.join() },
         })
       }
+      if (specifiedGroups.length) {
+        groups = await fetchAction(commit, {
+          apiMethod: API.groups.getGroupsInfo,
+          params: { group_ids: specifiedGroups.join() },
+        })
+      }
       commit('setUsers', [...profiles])
-      commit('setGroups', [...specifiedGroups])
+      commit('setGroups', [...groups])
 
       if (userPages) {
         if (selectedUsersItems.includes(USER_SERACH_PLACES.FRIENDS)) {
@@ -87,11 +94,28 @@ const profileModule = {
           )
         ) {
           commit('setIsLoading', true)
-          const { items: groupIds } = await fetchAction(commit, {
+          const { items: groups } = await fetchAction(commit, {
             apiMethod: API.groups.getUserGroups,
             params: { user_id },
           })
-          commit('setGroups', [...getters.groups, ...groupIds])
+          const { items: subscriptions } = await fetchAction(commit, {
+            apiMethod: API.users.getSubscriptions,
+            params: { user_id },
+          })
+          const subsWithoutUserPages = subscriptions.filter(
+            (sub) => sub.type == 'page'
+          )
+          const groupsWithoutPages = substract(
+            groups,
+            subsWithoutUserPages,
+            'id'
+          )
+          const resultGroups = [
+            ...subsWithoutUserPages,
+            ...groupsWithoutPages,
+          ]
+
+          commit('setGroups', [...getters.groups, ...resultGroups])
           commit('setIsLoading', false)
         }
       }
@@ -100,3 +124,4 @@ const profileModule = {
 }
 
 export default profileModule
+

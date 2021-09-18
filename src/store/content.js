@@ -1,6 +1,6 @@
 import API from '../api'
 import { CONTENT_TYPE } from '../constants/constants'
-import { fetchAction, sleep } from '../utils/utils'
+import { fetchAction, makeFieldNegative, mixUpWithOrder, sleep } from '../utils/utils'
 
 const contentModule = {
   namespaced: true,
@@ -48,23 +48,28 @@ const contentModule = {
     },
     async getLikedContent({ commit, getters, rootGetters }) {
       const users = rootGetters['profiles/users']
-      const groups = rootGetters['profiles/groups']
+      let groups = rootGetters['profiles/groups']
       const {
         contentTypes,
         userId,
         searchDepth: { selected: depthOfSearch },
       } = rootGetters['settingsFilter/settingsFilters']
       console.log(contentTypes)
+      groups = groups.map((group) => makeFieldNegative(group, 'id'))
+      
+      const targets = mixUpWithOrder(users,groups);
       if (contentTypes.wall) {
-        for (const { id, first_name, last_name } of users) {
+        for (const { id, first_name, last_name, name } of targets) {
           const data = await fetchAction(commit, {
             apiMethod: API.wall.getPosts,
             params: { owner_id: id, count: depthOfSearch },
           })
           if (data.items) {
+            const targetName = id > 0? `${first_name} ${last_name}` : name;
+            console.log(targetName)
             const postsWithOwnerNames = data.items.map((post) => ({
               ...post,
-              name: `${first_name} ${last_name}`,
+              name: targetName,
             }))
             for (const post of postsWithOwnerNames) {
               const { liked } = await fetchAction(commit, {

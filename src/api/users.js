@@ -1,6 +1,5 @@
 import http from '../plugins/axios'
 
-
 const getUsersInfo = ({ user_ids }) =>
   http.jsonp('users.get', {
     params: {
@@ -8,6 +7,15 @@ const getUsersInfo = ({ user_ids }) =>
     },
   })
 
+const getSubscriptions = ({ user_id }) =>
+  http.jsonp('users.getSubscriptions', {
+    params: {
+      user_id,
+      extended: 1,
+      count: 200
+    },
+  })
 export default {
-    getUsersInfo
+  getUsersInfo,
+  getSubscriptions
 }

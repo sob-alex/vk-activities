@@ -121,7 +121,7 @@
         <v-combobox
           v-if="isSpecifiedGroupsShown"
           class="mt-3"
-          v-model="localFilters.whereSearchInUsers.specifiedGroups"
+          v-model="localFilters.whereSearchInGroups.specifiedGroups"
           label="ID групп"
           multiple
           outlined
