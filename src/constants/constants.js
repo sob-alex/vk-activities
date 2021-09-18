@@ -10,4 +10,7 @@ export const GROUP_SERACH_PLACES = {
 }
 export const CONTENT_TYPE = {
   POST: 'post',
+  COMMENT: 'comment',
+  PHOTO_COMMENT: 'photo_comment',
+  PHOTO: 'photo'
 }

@@ -24,7 +24,7 @@
           class="likes-view__tabs"
           v-model="tab"
         >
-          <v-tab v-for="item in resultTabs" :key="item">{{
+          <v-tab v-for="item in resultTabs" :key="item" disabled>{{
             item
           }}</v-tab>
         </v-tabs>

@@ -1,16 +1,15 @@
 import http from '../plugins/axios'
 
-const getPosts = (params) =>
-  http.jsonp('wall.get', {
+const getAllPhotos = (params) =>
+  http.jsonp('photos.getAll', {
     params: {
       ...params,
       extended: 1,
-      fields: 'first_name,name',
     },
   })
 
-const getComments = (params) =>
-  http.jsonp('wall.getComments', {
+const getAllComments = (params) =>
+  http.jsonp('photos.getAllComments', {
     params: {
       ...params,
       need_likes: 1,
@@ -18,6 +17,6 @@ const getComments = (params) =>
   })
 
 export default {
-  getPosts,
-  getComments
+  getAllPhotos,
+  getAllComments,
 }
