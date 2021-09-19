@@ -6,6 +6,7 @@ import {
   mixUpWithOrder,
   sleep,
 } from '../utils/utils'
+import { fakePosts, fakePhotos, fakeComments } from './dummyData'
 
 const contentModule = {
   namespaced: true,
@@ -41,6 +42,12 @@ const contentModule = {
     },
   },
   actions: {
+    setDummyData({ commit,getters }){
+      
+      commit('setLikedPosts', [...getters.likedPosts, ...fakePosts] )
+      commit('setLikedPhotos', [...getters.likedPhotos, ...fakePhotos] )
+      commit('setLikedComments', [...getters.likedComments, ...fakeComments] )
+    },
     async fetchPosts({ commit }, { owner_id }) {
       try {
         commit('setIsLoading', true)

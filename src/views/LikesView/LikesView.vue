@@ -24,34 +24,92 @@
           class="likes-view__tabs"
           v-model="tab"
         >
-          <v-tab v-for="item in resultTabs" :key="item" disabled>{{
-            item
-          }}</v-tab>
+          <v-tab
+            v-for="item in resultTabs"
+            :key="item.key"
+            :disabled="item.disabled"
+            >{{ item.key }}</v-tab
+          >
         </v-tabs>
-        <div v-if="tab === 0" class="wall">
+
+        <div v-show="tab === 0" class="wall">
           <PostCard
             v-for="post in likedPosts"
+            :identificator="`${post.owner_id}_${post.id}`"
             :key="post.id"
             :name="post.name"
+            :date="post.date"
             :postText="post.text"
             :likesCount="post.likes.count"
             :repostsCount="post.reposts.count"
+            :commentsCount="post.comments.count"
+            :viewsCount="post.views.count"
+            :postAttachments="extractAttachs(post.attachments)"
+          />
+        </div>
+        <div v-show="tab === 1" class="photos">
+          <PhotoCardsLayout>
+            <v-col
+              cols="4"
+              v-for="photo in likedPhotos"
+              :key="photo.id"
+            >
+              <PhotoCard
+                :identificator="`${photo.owner_id}_${photo.id}`"
+                :name="photo.name"
+                :date="photo.date"
+                :postText="photo.text"
+                :likesCount="photo.likes.count"
+                :repostsCount="photo.reposts.count"
+                :photoUrL="extractImageUrlFromSizes(photo.sizes).url"
+              />
+            </v-col>
+          </PhotoCardsLayout>
+        </div>
+         <div v-show="tab === 2" class="comments">
+          <CommentCard
+            v-for="comment in likedComments"
+            :identificator="`${comment.owner_id}_${comment.post_id}?reply=${comment.id}`"
+            :key="comment.id"
+            :from_id="comment.from_id"
+            :date="comment.date"
+            :commentText="comment.text"
+            :likesCount="comment.likes.count"
+            :threadCommentsCount="comment.thread.count"
+            :hasAttachments="Boolean(comment.attachments)"
+            
           />
         </div>
       </v-col>
     </v-row>
+    <v-btn
+      @click="$store.dispatch('content/setDummyData')"
+      style="position: fixed; bottom: 50px; right: 10px"
+    >
+      Dummy Data
+    </v-btn>
   </div>
 </template>
 
 <script>
+
 import Vue from 'vue'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+import PhotoCardsLayout from '../../components/PhotoCardsLayout.vue'
 import PostCard from '../../components/PostCard.vue'
+import PhotoCard from '../../components/PhotoCard.vue'
+import CommentCard from '../../components/CommentCard.vue'
 import SettingsPanel from './components/SettingsPanel/SettingsPanel.vue'
 import {
   GROUP_SERACH_PLACES,
   USER_SERACH_PLACES,
 } from '../../constants/constants.js'
+import {
+  extractImagesFromAttachs,
+  extractVideoInfoFromAttachs,
+  extractImageUrlFromSizes,
+} from '../../utils/utils'
+
 const LIKES_CONTENT_TYPES = {
   WALL: 'Стена',
   PHOTOS: 'Фото в альбоме',
@@ -66,19 +124,22 @@ export default Vue.extend({
   components: {
     PostCard,
     SettingsPanel,
+    PhotoCard,
+    PhotoCardsLayout,
+    CommentCard
   },
   computed: {
-    ...mapGetters('content', ['likedPosts']),
+    ...mapGetters('content', ['likedPosts', 'likedPhotos','likedComments']),
     ...mapGetters('profiles', ['groups']),
     ...mapGetters('settingsFilter', ['settingsFilters']),
     resultTabs() {
-      const result = []
-      for (let type in LIKES_CONTENT_TYPES) {
-        if (this.settingsFilters.contentTypes[type.toLowerCase()]) {
-          result.push(LIKES_CONTENT_TYPES[type])
-        }
-      }
-      return result
+      return Object.entries(LIKES_CONTENT_TYPES).map(
+        ([key, value]) => ({
+          key: value,
+          disabled:
+            !this.settingsFilters.contentTypes[key.toLowerCase()],
+        })
+      )
     },
   },
   methods: {
@@ -91,6 +152,12 @@ export default Vue.extend({
       }
       this.startSearch()
     },
+    extractAttachs(attachs) {
+      const photos = extractImagesFromAttachs(attachs)
+      const videos = extractVideoInfoFromAttachs(attachs)
+      return [...photos, ...videos]
+    },
+    extractImageUrlFromSizes,
   },
   created() {},
 })
