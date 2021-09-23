@@ -14,8 +14,8 @@
           color="primary"
           block
           :disabled="!settingsFilters.valid"
-          @click="search"
-          >Поиск</v-btn
+          @click="searchAction"
+          >{{ isSearching ? 'Стоп' : 'Поиск' }}</v-btn
         >
       </v-col>
       <v-col cols="8">
@@ -31,7 +31,16 @@
             >{{ item.key }}</v-tab
           >
         </v-tabs>
-
+        <div v-if="isSearching">
+          <v-progress-linear
+            class="mt-2"
+            color="light-blue"
+            height="10"
+            :value="progress * 100"
+            striped
+          ></v-progress-linear>
+          <div class="text-right">Поиск: {{ currentItem }}</div>
+        </div>
         <div v-show="tab === 0" class="wall">
           <PostCard
             v-for="post in likedPosts"
@@ -66,7 +75,7 @@
             </v-col>
           </PhotoCardsLayout>
         </div>
-         <div v-show="tab === 2" class="comments">
+        <div v-show="tab === 2" class="comments">
           <CommentCard
             v-for="comment in likedComments"
             :identificator="`${comment.owner_id}_${comment.post_id}?reply=${comment.id}`"
@@ -77,7 +86,6 @@
             :likesCount="comment.likes.count"
             :threadCommentsCount="comment.thread.count"
             :hasAttachments="Boolean(comment.attachments)"
-            
           />
         </div>
       </v-col>
@@ -92,7 +100,6 @@
 </template>
 
 <script>
-
 import Vue from 'vue'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import PhotoCardsLayout from '../../components/PhotoCardsLayout.vue'
@@ -126,11 +133,20 @@ export default Vue.extend({
     SettingsPanel,
     PhotoCard,
     PhotoCardsLayout,
-    CommentCard
+    CommentCard,
   },
   computed: {
-    ...mapGetters('content', ['likedPosts', 'likedPhotos','likedComments']),
+    ...mapGetters('content', [
+      'likedPosts',
+      'likedPhotos',
+      'likedComments',
+    ]),
     ...mapGetters('profiles', ['groups']),
+    ...mapGetters('content', [
+      'progress',
+      'currentItem',
+      'isSearching',
+    ]),
     ...mapGetters('settingsFilter', ['settingsFilters']),
     resultTabs() {
       return Object.entries(LIKES_CONTENT_TYPES).map(
@@ -143,19 +159,31 @@ export default Vue.extend({
     },
   },
   methods: {
-    ...mapActions('content', ['fetchPosts', 'getLikedContent']),
-    ...mapActions('profiles', ['fetchGroups', 'getTargetIds']),
+    ...mapActions('content', ['getLikedContent', 'stopSeatch']),
+    ...mapActions('profiles', ['getTargetIds']),
     ...mapActions(['startSearch']),
-    async search() {
+    search() {
       if (!this.settingsFilters.valid) {
         return
       }
       this.startSearch()
     },
     extractAttachs(attachs) {
-      const photos = extractImagesFromAttachs(attachs)
-      const videos = extractVideoInfoFromAttachs(attachs)
+      const photos = attachs ? extractImagesFromAttachs(attachs) : []
+      const videos = attachs
+        ? extractVideoInfoFromAttachs(attachs)
+        : []
       return [...photos, ...videos]
+    },
+    searchAction() {
+      if (this.isSearching) {
+        this.stopSeatch()
+      } else {
+        if (!this.settingsFilters.valid) {
+          return
+        }
+        this.search()
+      }
     },
     extractImageUrlFromSizes,
   },

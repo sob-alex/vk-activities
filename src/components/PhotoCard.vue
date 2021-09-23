@@ -2,8 +2,7 @@
   <div class="photo-card">
     <v-sheet color="white" elevation="2" rounded>
       <v-img
-        contain
-        max-height="300px"
+        height="200px"
         :lazy-src="photoUrL"
         :src="photoUrL"
       >

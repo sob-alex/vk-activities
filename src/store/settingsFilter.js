@@ -10,7 +10,7 @@ const contentModule = {
     isLoading: false,
     error: null,
     settingsFilters: {
-      valid: true,
+      valid: false,
       userId: '',
       contentTypes: {
         wall: true,
