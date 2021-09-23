@@ -6,7 +6,7 @@
     </div>
 
     <v-row class="mt-2">
-      <v-col class="settings" cols="4">
+      <v-col class="settings" lg="4" cols="12">
         <SettingsPanel />
         <v-btn
           class="mt-4"
@@ -18,7 +18,7 @@
           >{{ isSearching ? 'Стоп' : 'Поиск' }}</v-btn
         >
       </v-col>
-      <v-col cols="8">
+      <v-col lg="8" cols="12">
         <v-tabs
           background-color="transparent"
           class="likes-view__tabs"
@@ -52,6 +52,7 @@
             :likesCount="post.likes.count"
             :repostsCount="post.reposts.count"
             :commentsCount="post.comments.count"
+            :isRepost="Boolean(post.copy_history)"
             :viewsCount="post.views.count"
             :postAttachments="extractAttachs(post.attachments)"
           />
@@ -141,6 +142,7 @@ export default Vue.extend({
       'likedPhotos',
       'likedComments',
     ]),
+    ...mapGetters(['isAuthorized']),
     ...mapGetters('profiles', ['groups']),
     ...mapGetters('content', [
       'progress',
@@ -162,12 +164,8 @@ export default Vue.extend({
     ...mapActions('content', ['getLikedContent', 'stopSeatch']),
     ...mapActions('profiles', ['getTargetIds']),
     ...mapActions(['startSearch']),
-    search() {
-      if (!this.settingsFilters.valid) {
-        return
-      }
-      this.startSearch()
-    },
+    ...mapMutations(['setIsModalOpen']),
+
     extractAttachs(attachs) {
       const photos = attachs ? extractImagesFromAttachs(attachs) : []
       const videos = attachs
@@ -176,13 +174,17 @@ export default Vue.extend({
       return [...photos, ...videos]
     },
     searchAction() {
+      if (!this.isAuthorized) {
+        this.setIsModalOpen(true)
+        return
+      }
       if (this.isSearching) {
         this.stopSeatch()
       } else {
         if (!this.settingsFilters.valid) {
           return
         }
-        this.search()
+        this.startSearch()
       }
     },
     extractImageUrlFromSizes,

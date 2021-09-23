@@ -12,5 +12,6 @@ export const CONTENT_TYPE = {
   POST: 'post',
   COMMENT: 'comment',
   PHOTO_COMMENT: 'photo_comment',
-  PHOTO: 'photo'
+  PHOTO: 'photo',
 }
+export const AUTH_LINK = `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_CLIENT_ID}&display=page&redirect_uri=http://localhost:8080/&scope=photos,wall,offline,groups,friends&response_type=token&v=5.131&state=123456`

@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="app-bar" app dark>
+  <v-app-bar class="app-bar" color="primary" app dark>
     <v-btn class="app-bar__button" plain>
       <router-link class="app-bar__link" to="/"
         >Поиск по лайкам</router-link
@@ -11,13 +11,8 @@
       >
     </v-btn>
     <v-spacer></v-spacer>
-    <v-divider inset vertical></v-divider>
-    <v-btn
-      href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      target="_blank"
-      text
-    >
-      <span class="mr-2">Login</span>
+    <v-btn v-if="!isAuthorized" :href="authLink" text>
+      <span class="mr-2">Войти ВК</span>
       <v-icon>mdi-login</v-icon>
     </v-btn>
   </v-app-bar>
@@ -25,16 +20,25 @@
 
 <script>
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
+import { AUTH_LINK } from '../constants/constants'
 
 export default Vue.extend({
   name: 'Header',
+  data() {
+    return {
+      authLink: AUTH_LINK,
+    }
+  },
+  computed: {
+    ...mapGetters(['isAuthorized']),
+  },
 })
 </script>
 
 <style lang="scss">
 @import '../scss/colors.scss';
 .app-bar {
-  background-color: var(--v-primary-base) !important;
   &__link {
     color: var(--v-onPrimary-base) !important;
     text-decoration: none;

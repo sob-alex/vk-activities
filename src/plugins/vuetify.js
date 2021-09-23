@@ -15,4 +15,12 @@ export default new Vuetify({
     },
     options: { customProperties: true },
   },
+  breakpoint: {
+    thresholds: {
+      xs: 490,
+      sm: 800,
+      md: 1000,
+      lg: 1280,
+    }, 
+  },
 })

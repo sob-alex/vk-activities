@@ -56,6 +56,8 @@ export const formatDate = (vkDate) => {
   )}.${date.getFullYear()}`
 }
 
+export const getToken = (hash = '') => hash.slice(14,99)
+
 export const fetchAction = async (
   commit,
   { apiMethod, params = {}, needCommit = false, commitType = '' }

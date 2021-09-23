@@ -1,6 +1,6 @@
 <template>
   <div class="post-card">
-    <v-card  class="mx-auto my-2">
+    <v-card class="mx-auto my-2">
       <div class="d-flex justify-space-between">
         <v-card-title class="text-h5">{{ name }}</v-card-title>
         <v-btn
@@ -17,7 +17,13 @@
 
       <v-card-text>
         <div class="text-body-2">
-          {{ postText }}
+          <div  v-if="isRepost"  class="mb-2">
+            <v-icon>mdi-share-outline</v-icon>Запись с другого
+            источника
+          </div>
+          <div>
+            {{ postText }}
+            </div> 
         </div>
       </v-card-text>
       <v-carousel
@@ -64,7 +70,7 @@
         <v-icon class="mr-1"> mdi-eye </v-icon>
         <span class="subheading mr-2">{{ viewsCount }}</span>
         <v-spacer></v-spacer>
-         <span class="subheading mr-2">{{ formatDate(date) }}</span>
+        <span class="subheading mr-2">{{ formatDate(date) }}</span>
       </v-card-actions>
     </v-card>
   </div>
@@ -83,6 +89,7 @@ export default {
     viewsCount: Number,
     date: Number,
     name: String,
+    isRepost: Boolean,
     postAttachments: Array,
     identificator: String,
   },
@@ -111,9 +118,9 @@ export default {
   created() {
     console.log('creted')
   },
-  methods:{
-    formatDate
-  }
+  methods: {
+    formatDate,
+  },
 }
 </script>
 
