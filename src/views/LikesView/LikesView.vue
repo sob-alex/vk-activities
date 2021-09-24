@@ -1,6 +1,6 @@
 <template>
   <div class="likes-view">
-    <h1 class="text-h4 mt-7">Поиск по лайкам</h1>
+    <h1 class="likes-view__header text-h4">Поиск по лайкам</h1>
     <div class="text--secondary text-body-1 mt-3">
       Ищутся лайки пользователя в группах и на страницах пользователей
     </div>
@@ -23,13 +23,16 @@
           background-color="transparent"
           class="likes-view__tabs"
           v-model="tab"
+          :show-arrows="$vuetify.breakpoint.xs"
         >
           <v-tab
             v-for="item in resultTabs"
             :key="item.key"
             :disabled="item.disabled"
-            >{{ item.key }}</v-tab
-          >
+            ><v-badge color="accent" :value="item.badgeCount" :content="item.badgeCount">
+              {{ item.key }}
+            </v-badge>
+          </v-tab>
         </v-tabs>
         <div v-if="isSearching">
           <v-progress-linear
@@ -60,7 +63,8 @@
         <div v-show="tab === 1" class="photos">
           <PhotoCardsLayout>
             <v-col
-              cols="4"
+              cols="6"
+              sm="4"
               v-for="photo in likedPhotos"
               :key="photo.id"
             >
@@ -92,6 +96,7 @@
       </v-col>
     </v-row>
     <v-btn
+      v-if="$vuetify.breakpoint.smAndUp"
       @click="$store.dispatch('content/setDummyData')"
       style="position: fixed; bottom: 50px; right: 10px"
     >
@@ -109,10 +114,6 @@ import PhotoCard from '../../components/PhotoCard.vue'
 import CommentCard from '../../components/CommentCard.vue'
 import SettingsPanel from './components/SettingsPanel/SettingsPanel.vue'
 import {
-  GROUP_SERACH_PLACES,
-  USER_SERACH_PLACES,
-} from '../../constants/constants.js'
-import {
   extractImagesFromAttachs,
   extractVideoInfoFromAttachs,
   extractImageUrlFromSizes,
@@ -128,6 +129,7 @@ export default Vue.extend({
   name: 'Home',
   data: () => ({
     tab: 0,
+    resultTabs: [],
   }),
   components: {
     PostCard,
@@ -150,15 +152,16 @@ export default Vue.extend({
       'isSearching',
     ]),
     ...mapGetters('settingsFilter', ['settingsFilters']),
-    resultTabs() {
-      return Object.entries(LIKES_CONTENT_TYPES).map(
-        ([key, value]) => ({
-          key: value,
-          disabled:
-            !this.settingsFilters.contentTypes[key.toLowerCase()],
-        })
-      )
-    },
+    // resultTabs() {
+    //   return Object.entries(LIKES_CONTENT_TYPES).map(
+    //     ([key, value]) => ({
+    //       key: value,
+    //       badgeCount: this.chooseBadgeIndex(key),
+    //       disabled:
+    //         !this.settingsFilters.contentTypes[key.toLowerCase()],
+    //     })
+    //   )
+    // },
   },
   methods: {
     ...mapActions('content', ['getLikedContent', 'stopSeatch']),
@@ -187,15 +190,55 @@ export default Vue.extend({
         this.startSearch()
       }
     },
+    calculateResultTabs() {
+      console.log('calc');
+      this.resultTabs = Object.entries(LIKES_CONTENT_TYPES).map(
+        ([key, value]) => ({
+          key: value,
+          badgeCount: this.chooseBadgeIndex(value),
+          disabled:
+            !this.settingsFilters.contentTypes[key.toLowerCase()],
+        })
+      )
+    },
+    chooseBadgeIndex(key) {
+      if (key === LIKES_CONTENT_TYPES.WALL) return this.likedPosts.length
+      if (key === LIKES_CONTENT_TYPES.PHOTOS) return this.likedPhotos.length
+      if (key === LIKES_CONTENT_TYPES.COMMENTS)
+        return this.likedComments.length
+    },
     extractImageUrlFromSizes,
   },
-  created() {},
+  watch: {
+    settingsFilters(newVal, oldVal) {
+      if (
+        JSON.stringify(newVal.contentTypes) !==
+        JSON.stringify(oldVal.contentTypes)
+      ) {
+        this.calculateResultTabs()
+      }
+    },
+    likedPosts: 'calculateResultTabs',
+    likedPhotos: 'calculateResultTabs',
+    likedComments: 'calculateResultTabs',
+  },
+  created() {
+    this.calculateResultTabs()
+  },
 })
 </script>
 
 <style lang="scss">
 @import '../../scss/colors.scss';
+// @import '~vuetify/src/styles/styles.sass';
 .likes-view {
+  &__header {
+    margin-top: 10px;
+
+    // @media (min-width: map-get($grid-breakpoints, 'lg')) {
+    //    margin-top: 14px;
+    // }
+  }
   &__tabs {
     border-bottom: 1px solid $border-color;
     // background-color: transparent !important;

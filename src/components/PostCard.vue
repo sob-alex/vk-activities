@@ -17,13 +17,13 @@
 
       <v-card-text>
         <div class="text-body-2">
-          <div  v-if="isRepost"  class="mb-2">
+          <div v-if="isRepost" class="mb-2">
             <v-icon>mdi-share-outline</v-icon>Запись с другого
             источника
           </div>
           <div>
             {{ postText }}
-            </div> 
+          </div>
         </div>
       </v-card-text>
       <v-carousel
@@ -60,15 +60,18 @@
         </v-carousel-item>
       </v-carousel>
 
-      <v-card-actions>
-        <v-icon class="mr-1"> mdi-heart </v-icon>
-        <span class="subheading mr-2">{{ likesCount }}</span>
-        <v-icon class="mr-1"> mdi-share-variant </v-icon>
-        <span class="subheading mr-2">{{ repostsCount }}</span>
-        <v-icon class="mr-1"> mdi-comment </v-icon>
-        <span class="subheading mr-6">{{ commentsCount }}</span>
-        <v-icon class="mr-1"> mdi-eye </v-icon>
-        <span class="subheading mr-2">{{ viewsCount }}</span>
+      <v-card-actions class="flex-column flex-sm-row">
+        <div>
+          <v-icon class="mr-1"> mdi-heart </v-icon>
+          <span class="subheading mr-2">{{ likesCount }}</span>
+          <v-icon class="mr-1"> mdi-share-variant </v-icon>
+          <span class="subheading mr-2">{{ repostsCount }}</span>
+          <v-icon class="mr-1"> mdi-comment </v-icon>
+          <span class="subheading mr-6">{{ commentsCount }}</span>
+          <v-icon class="mr-1"> mdi-eye </v-icon>
+          <span class="subheading mr-2">{{ viewsCount }}</span>
+        </div>
+
         <v-spacer></v-spacer>
         <span class="subheading mr-2">{{ formatDate(date) }}</span>
       </v-card-actions>
@@ -125,6 +128,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-card__title{
+  padding: 16px 16px 0px
+}
 .image-title {
   color: white;
   font-size: 1.1rem;
