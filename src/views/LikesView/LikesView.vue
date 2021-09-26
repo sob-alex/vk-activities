@@ -100,11 +100,12 @@
       </v-col>
     </v-row>
     <v-btn
-      v-if="$vuetify.breakpoint.smAndUp"
+      
       @click="$store.dispatch('content/setDummyData')"
-      style="position: fixed; bottom: 50px; right: 10px"
+      color='accent'
+      class="test-button"
     >
-      Dummy Data
+      Тест
     </v-btn>
   </div>
 </template>
@@ -222,16 +223,11 @@ export default Vue.extend({
         JSON.stringify(oldVal.contentTypes)
       ) {
         this.calculateResultTabs()
-      }
-    },
-    resultTabs: {
-      handler() {
         const availableIndex = this.resultTabs.findIndex(
           ({ disabled }) => !disabled
         )
-       this.tab = availableIndex;
-      },
-      deep: true,
+        this.tab = availableIndex
+      }
     },
     likedPosts: 'calculateResultTabs',
     likedPhotos: 'calculateResultTabs',
@@ -267,5 +263,10 @@ export default Vue.extend({
     // color: $main-text-color-light !important;
     // background-color: $main-color !important;
   }
+}
+.test-button {
+  position: fixed;
+  bottom: 50px;
+  right: 10px;
 }
 </style>

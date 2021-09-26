@@ -8,7 +8,7 @@
 
       <v-btn
         v-if="$vuetify.breakpoint.mdAndUp"
-        class="app-bar__button"
+        class="app-bar__button mr-4"
         plain
       >
         <router-link class="app-bar__link" to="/"
@@ -30,24 +30,23 @@
         <v-icon>mdi-login</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+    <v-navigation-drawer
+      class="drawer"
+      v-model="drawer"
+      absolute
+      temporary
+    >
       <v-list nav dense>
         <v-list-item-group
           active-class="deep-purple--text text--accent-4"
         >
           <v-list-item>
-            <v-list-item-title
-              ><router-link to="/"
-                >Поиск по лайкам</router-link
-              ></v-list-item-title
-            >
+            <router-link to="/">Поиск по лайкам</router-link>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title>
-              <router-link  to="/comments"
-                >Поиск по комментам</router-link
-              ></v-list-item-title
+            <router-link to="/comments"
+              >Поиск по комментам</router-link
             >
           </v-list-item>
         </v-list-item-group>
@@ -78,9 +77,27 @@ export default Vue.extend({
 <style lang="scss">
 @import '../scss/colors.scss';
 .app-bar {
+  &__button.v-btn:not(.v-btn--round).v-size--default {
+    height: auto;
+    padding: 0;
+  }
   &__link {
+    padding: 10px 5px;
     color: var(--v-onPrimary-base) !important;
     text-decoration: none;
+  }
+}
+.drawer {
+  .v-list .v-list-item {
+    padding: 0;
+    height: auto;
+    min-height: auto;
+    a {
+      width: 100%;
+      line-height: 2.8rem;
+      padding-left: 4px;
+      text-decoration: none;
+    }
   }
 }
 </style>
