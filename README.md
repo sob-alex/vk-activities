@@ -1,5 +1,6 @@
 # vk-comments-and-likes
 
+You can test my app here: https://sob-alex.github.io/vk-activities/
 ## Project setup
 ```
 npm install
