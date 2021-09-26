@@ -1,5 +1,9 @@
 <template>
-  <v-dialog :value="isModalOpen" width="500">
+  <v-dialog
+    @click:outside="setIsModalOpen(false)"
+    :value="isModalOpen"
+    width="500"
+  >
     <v-card>
       <v-card-title class="text-h5 grey lighten-2">
         Необходима авторизация
@@ -24,6 +28,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { mapMutations } from 'vuex'
 import { AUTH_LINK } from '../constants/constants'
 
 export default {
@@ -35,6 +40,9 @@ export default {
   },
   computed: {
     ...mapGetters(['isModalOpen']),
+  },
+  methods: {
+    ...mapMutations(['setIsModalOpen']),
   },
 }
 </script>

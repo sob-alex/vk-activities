@@ -7,7 +7,7 @@
         <router-view />
       </v-container>
     </v-main>
-    <v-footer app> FOOOTER </v-footer>
+    <v-footer app class="text--secondary"> © Алексей Соболев </v-footer>
     <Dialog />
     <Snackbar/>
   </v-app>
