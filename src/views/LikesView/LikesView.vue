@@ -29,7 +29,11 @@
             v-for="item in resultTabs"
             :key="item.key"
             :disabled="item.disabled"
-            ><v-badge color="accent" :value="item.badgeCount" :content="item.badgeCount">
+            ><v-badge
+              color="accent"
+              :value="item.badgeCount"
+              :content="item.badgeCount"
+            >
               {{ item.key }}
             </v-badge>
           </v-tab>
@@ -191,7 +195,7 @@ export default Vue.extend({
       }
     },
     calculateResultTabs() {
-      console.log('calc');
+      console.log('calc')
       this.resultTabs = Object.entries(LIKES_CONTENT_TYPES).map(
         ([key, value]) => ({
           key: value,
@@ -202,8 +206,10 @@ export default Vue.extend({
       )
     },
     chooseBadgeIndex(key) {
-      if (key === LIKES_CONTENT_TYPES.WALL) return this.likedPosts.length
-      if (key === LIKES_CONTENT_TYPES.PHOTOS) return this.likedPhotos.length
+      if (key === LIKES_CONTENT_TYPES.WALL)
+        return this.likedPosts.length
+      if (key === LIKES_CONTENT_TYPES.PHOTOS)
+        return this.likedPhotos.length
       if (key === LIKES_CONTENT_TYPES.COMMENTS)
         return this.likedComments.length
     },
@@ -217,6 +223,15 @@ export default Vue.extend({
       ) {
         this.calculateResultTabs()
       }
+    },
+    resultTabs: {
+      handler() {
+        const availableIndex = this.resultTabs.findIndex(
+          ({ disabled }) => !disabled
+        )
+       this.tab = availableIndex;
+      },
+      deep: true,
     },
     likedPosts: 'calculateResultTabs',
     likedPhotos: 'calculateResultTabs',

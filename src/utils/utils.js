@@ -1,3 +1,5 @@
+import store from '../store/index'
+
 export const isSomeValueTrueInObject = (targetObject) =>
   Object.values(targetObject).some((value) => value)
 
@@ -59,20 +61,16 @@ export const formatDate = (vkDate) => {
 export const getToken = (hash = '') => hash.slice(14,99)
 
 export const fetchAction = async (
-  commit,
-  { apiMethod, params = {}, needCommit = false, commitType = '' }
+  { apiMethod, params = {}}
 ) => {
   let data = {}
   try {
     const { response, error } = await apiMethod(params)
     if (error) {
-      commit('setError', error.error_msg)
+      store.dispatch('setError', error.error_msg, { root: true })
       console.error(error)
       data = error
       return data
-    }
-    if (needCommit) {
-      commit(commitType, response)
     }
     console.log('RESPONSE:', response)
     data = response

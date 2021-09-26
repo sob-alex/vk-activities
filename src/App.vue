@@ -9,14 +9,17 @@
     </v-main>
     <v-footer app> FOOOTER </v-footer>
     <Dialog />
+    <Snackbar/>
   </v-app>
 </template>
 
 <script>
 import Vue from 'vue'
+
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import Dialog from './components/Dialog.vue'
 import Header from './components/Header.vue'
+import Snackbar from './components/Snackbar.vue'
 import { getToken } from './utils/utils'
 import { refreshToken } from './plugins/axios'
 export default Vue.extend({
@@ -24,6 +27,7 @@ export default Vue.extend({
   components: {
     Header,
     Dialog,
+    Snackbar
   },
   methods: {
     ...mapMutations(['setIsAuthorized']),
