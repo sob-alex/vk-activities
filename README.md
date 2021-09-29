@@ -16,7 +16,8 @@ Also you can choose the depth of your search.
 * Vuex
 * Vue Router
 * Vuetify
-* Vuelidate  
+* Vuelidate
+* Jest unit tests  
   
 
 ## Link of working app
