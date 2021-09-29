@@ -7,10 +7,13 @@ export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export const makeFieldNegative = (object, field) => ({
-  ...object,
-  [field]: -object[field],
-})
+export const makeFieldNegative = (object, field) => {
+  if (!object[field]) return object
+  return {
+    ...object,
+    [field]: -object[field],
+  }
+}
 
 export const substract = (from, it, byField) =>
   from.filter(
