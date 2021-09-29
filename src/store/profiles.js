@@ -3,7 +3,11 @@ import {
   GROUP_SERACH_PLACES,
   USER_SERACH_PLACES,
 } from '../constants/constants'
-import { fetchAction, substract } from '../utils/utils'
+import {
+  fetchAction,
+  substract,
+  transformUserIdentifier,
+} from '../utils/utils'
 
 const profileModule = {
   namespaced: true,
@@ -27,7 +31,7 @@ const profileModule = {
   actions: {
     async getTargetIds({ commit, getters, rootGetters }) {
       const settings = rootGetters['settingsFilter/settingsFilters']
-      const {
+      let {
         userId: user_id,
         whereSearch: { userPages, groupPages },
         whereSearchInUsers: {
@@ -41,6 +45,7 @@ const profileModule = {
       } = settings
       let profiles = []
       let groups = []
+
       if (specifiedProfiles.length) {
         profiles = await fetchAction({
           apiMethod: API.users.getUsersInfo,
@@ -55,6 +60,18 @@ const profileModule = {
       }
       commit('setUsers', [...profiles])
       commit('setGroups', [...groups])
+
+      user_id = transformUserIdentifier(user_id)
+
+      if (isNaN(Number(user_id))) {
+        const { object_id } = await fetchAction({
+          apiMethod: API.users.resolveName,
+          params: { screen_name: user_id },
+        })
+        user_id = object_id
+      }
+
+      commit('settingsFilter/setUserId', user_id, { root: true })
 
       if (userPages) {
         if (selectedUsersItems.includes(USER_SERACH_PLACES.FRIENDS)) {

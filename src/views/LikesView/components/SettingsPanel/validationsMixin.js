@@ -8,6 +8,9 @@ export default {
             if (!this.$v.localFilters.userId.required) {
               errors.push('User ID не должно быть пустым')
             }
+            if (!this.$v.localFilters.userId.correct) {
+              errors.push('Некорретный формат')
+            }
             return errors
           },
           selectUserFilterErrors() {

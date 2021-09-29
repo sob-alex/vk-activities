@@ -1,21 +1,46 @@
 <template>
   <div>
     <v-form>
-      <v-expansion-panels v-model="expPanelsControl" multiple accordion>
+      <v-expansion-panels
+        v-model="expPanelsControl"
+        multiple
+        accordion
+      >
         <!-- MAIN INFO -->
         <v-expansion-panel>
           <v-expansion-panel-header
             disable-icon-rotate
             class="text-subtitle-2"
-            >ID пользователя
+          >
+            <span
+              >Идентификатор пользователя
+              <v-tooltip right max-width="300px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    @click="log"
+                    class="ml-1"
+                    v-bind="attrs"
+                    v-on="on"
+                    small
+                  >
+                    mdi-account-question
+                  </v-icon>
+                </template>
+                <span
+                  >Например: 12345, id12345,
+                  https://vk.com/id12345</span
+                >
+              </v-tooltip>
+            </span>
+
             <template v-slot:actions>
               <v-icon color="secondary">mdi-identifier </v-icon>
             </template></v-expansion-panel-header
           >
           <v-expansion-panel-content>
             <v-text-field
-              v-model="localFilters.userId"
-              label="Введите ID"
+              v-model.trim="localFilters.userId"
+              label="Введите идентификатор"
               :error-messages="userIdErrors"
               clearable
               dense
@@ -42,7 +67,6 @@
               label="Постов"
               hide-details
               dense
-               
             ></v-checkbox>
             <v-checkbox
               v-model="localFilters.contentTypes.comments"
@@ -216,7 +240,13 @@ export default {
   mixins: [validationMixin, validationsMixin],
   validations: {
     localFilters: {
-      userId: { required },
+      userId: {
+        required,
+        correct: (value) =>
+          /^\d+$/.test(value) ||
+          /id\d+$/.test(value) ||
+          /https:\/\/vk.com\//.test(value),
+      },
       whereSearchInUsers: {
         selected: {
           some: (val) => val.length,
@@ -234,14 +264,20 @@ export default {
       localFilters: {
         ...this.$store.state.settingsFilter.settingsFilters,
       },
-      expPanelsControl: [0]
+      expPanelsControl: [0],
     }
   },
   methods: {
     ...mapMutations('settingsFilter', ['setSettingsFilters']),
-    log(e){
-      console.log(e)
-    }
+    log(e) {
+      e.stopPropagation()
+    },
+    updateFilters() {
+      this.setSettingsFilters({
+        ...JSON.parse(JSON.stringify(this.localFilters)),
+        valid: this.localFilters.valid && !this.$v.$invalid,
+      })
+    },
   },
   computed: {
     isSpecifiedProfilesShown() {
@@ -257,12 +293,7 @@ export default {
   },
   watch: {
     localFilters: {
-      handler() {
-        this.setSettingsFilters({
-          ...JSON.parse(JSON.stringify(this.localFilters)),
-          valid: this.localFilters.valid && !this.$v.$invalid,
-        })
-      },
+      handler: 'updateFilters',
       deep: true,
     },
     'localFilters.whereSearch.userPages'() {

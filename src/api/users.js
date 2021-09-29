@@ -12,10 +12,19 @@ const getSubscriptions = ({ user_id }) =>
     params: {
       user_id,
       extended: 1,
-      count: 200
+      count: 200,
     },
   })
+
+const resolveName = ({ screen_name }) =>
+  http.jsonp('utils.resolveScreenName', {
+    params: {
+      screen_name,
+    },
+  })
+
 export default {
   getUsersInfo,
-  getSubscriptions
+  getSubscriptions,
+  resolveName
 }

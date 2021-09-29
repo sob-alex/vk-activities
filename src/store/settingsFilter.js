@@ -4,7 +4,7 @@ import {
   USER_SERACH_PLACES,
 } from '../constants/constants'
 
-const contentModule = {
+const settingsFilter = {
   namespaced: true,
   state: {
     isLoading: false,
@@ -49,8 +49,11 @@ const contentModule = {
     setSettingsFilters(state, settings) {
       state.settingsFilters = settings
     },
+    setUserId(state, userId) {
+      state.settingsFilters.userId = userId
+    },
   },
   actions: {},
 }
 
-export default contentModule
+export default settingsFilter

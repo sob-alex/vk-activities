@@ -58,11 +58,27 @@ export const formatDate = (vkDate) => {
   )}.${date.getFullYear()}`
 }
 
-export const getToken = (hash = '') => hash.slice(14,99)
+export const getToken = (hash = '') => hash.slice(14, 99)
 
-export const fetchAction = async (
-  { apiMethod, params = {}}
-) => {
+export const transformUserIdentifier = (value) => {
+  if (/^\d+$/.test(value)) {
+    return value
+  }
+  if (/^id\d+$/.test(value)) {
+    return value.slice(2)
+  }
+  if (/https:\/\/vk.com\//.test(value)) {
+    const identifier = value.slice(15)
+    const sliced = identifier.slice(2)
+    if (!isNaN(Number(sliced))) {
+      return sliced
+    }
+    return identifier
+  }
+  return ''
+}
+
+export const fetchAction = async ({ apiMethod, params = {} }) => {
   let data = {}
   try {
     const { response, error } = await apiMethod(params)
