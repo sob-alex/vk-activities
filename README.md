@@ -1,35 +1,31 @@
-# vk-comments-and-likes
+# About app
+This app provides an opportunity to search for VK users likes.
 
-You can test my app here: https://sob-alex.github.io/vk-activities/
-## Project setup
-```
-npm install
-```
+There are many filters that allow you to search for a user's likes on:
+- post
+- comments
+- Photos in photo albums
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+You can search in:
+- groups (user groups, specified groups)
+- user pages (in friends, subscribers, specified profiles)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Also you can choose the depth of your search.
+## List of technologies used
+* Vue
+* Vuex
+* Vue Router
+* Vuetify
+* Vuelidate  
+  
 
-### Run your unit tests
-```
-npm run test:unit
-```
+## Link of working app
+https://sob-alex.github.io/vk-activities/
+## Screenshots
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
+<img src="screenshots/i1.PNG" width="100%" >
+<img src="screenshots/i2.PNG" width="100%" >
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Mobile:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<img src="screenshots/i3.PNG" width="25%" >
