@@ -11,12 +11,19 @@ You can search in:
 - user pages (in friends, subscribers, specified profiles)
 
 Also you can choose the depth of your search.
+
+My working progress you can see here: https://github.com/sob-alex/vk-activities/projects/1
+
+if you have any suggestions and notes, go here: https://github.com/sob-alex/vk-activities/issues
+
+if you want to look at my plans go here: https://github.com/sob-alex/vk-activities/wiki
 ## List of technologies used
 * Vue
 * Vuex
 * Vue Router
 * Vuetify
-* Vuelidate  
+* Vuelidate
+* Jest unit tests  
   
 
 ## Link of working app
