@@ -15,7 +15,7 @@ const settingsFilter = {
       contentTypes: {
         wall: true,
         photos: true,
-        comments: true,
+        comments: false,
       },
       whereSearch: {
         userPages: true,

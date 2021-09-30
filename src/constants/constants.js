@@ -2,7 +2,7 @@ export const USER_SERACH_PLACES = {
   FRIENDS: 'друзьях',
   SUBSCRIBERS: 'подписчиках',
   SPECIFIED_PROFILES: 'указанных профилях',
-  FIENDS_FRIENDS: 'друзьях друзей',
+  // FIENDS_FRIENDS: 'друзьях друзей',
 }
 export const GROUP_SERACH_PLACES = {
   USER_GROUPS: 'группах пользователя',
