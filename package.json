@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "generate-docs": "jsdoc -c JSDocConf.json",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
@@ -34,6 +35,8 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^6.2.2",
+    "jsdoc": "^3.6.7",
+    "jsdoc-to-markdown": "^7.0.1",
     "lint-staged": "^9.5.0",
     "prettier": "^2.2.1",
     "sass": "~1.32.0",
