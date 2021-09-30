@@ -16,7 +16,7 @@ My working progress you can see here: https://github.com/sob-alex/vk-activities/
 
 if you have any suggestions and notes, go here: https://github.com/sob-alex/vk-activities/issues
 
-if you want to look at my plans go here: https://github.com/sob-alex/vk-activities/wiki
+if you want to look at wiki of project (my plans, JSDocs) go here: https://github.com/sob-alex/vk-activities/wiki
 ## List of technologies used
 * Vue
 * Vuex
