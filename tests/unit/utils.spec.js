@@ -2,6 +2,7 @@ import {
   isSomeValueTrueInObject,
   makeFieldNegative,
   substract,
+  transformUserIdentifier
 } from '../../src/utils/utils'
 
 describe('isSomeValueTrueInObject return ', () => {
@@ -54,3 +55,22 @@ describe('substract ', () => {
     expect(substract(minuend, subtrahendB, 'id')).toEqual(minuend)
   })
 })
+
+describe('transformUserIdentifier ', () => {
+   
+  
+  test(`transforms string only with number correctly`, () => {
+    expect(transformUserIdentifier('12345')).toEqual('12345')
+  })
+
+  test(`transforms string with number with id prefix correctly`, () => {
+    expect(transformUserIdentifier('id12345')).toEqual('12345')
+  })
+
+  test(`transforms link identifier correctly`, () => {
+    expect(transformUserIdentifier('https://vk.com/id12345')).toEqual('12345')
+    expect(transformUserIdentifier('https://vk.com/asdfg')).toEqual('asdfg')
+  })
+  
+})
+
